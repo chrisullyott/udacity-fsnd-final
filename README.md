@@ -29,13 +29,13 @@ _As a security precaution, log in as_ `root` _has been disabled. However,_ `grad
 
 _Here are the steps I personally took to complete this project. There are a lot of steps!_
 
-##### Create an Amazon AWS virtual machine and get the private SSH key, VM IP address
+#### Create an Amazon AWS virtual machine and get the private SSH key, VM IP address
 
 ```
 https://www.udacity.com/account#!/development_environment
 ```
 
-##### Log in as the default root user
+#### Log in as the default root user
 
 ```
 $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
@@ -43,19 +43,19 @@ $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
 
 ## Update server 
 
-##### View updatable packages
+#### View updatable packages
 
 ```
 $ sudo apt-get update
 ```
 
-##### Upgrade packages to latest available
+#### Upgrade packages to latest available
 
 ```
 $ sudo apt-get upgrade
 ```
 
-##### If some downloads failed, try again
+#### If some downloads failed, try again
 
 ```
 $ sudo apt-get upgrade --fix-missing
@@ -63,19 +63,19 @@ $ sudo apt-get upgrade --fix-missing
 
 ## Create new sudo-enabled user
 
-##### Install "finger" app (not required but helpful for user management)
+#### Install "finger" app (not required but helpful for user management)
 
 ```
 $ sudo sudo apt-get install finger
 ```
 
-##### Create the new user, "grader"
+#### Create the new user, "grader"
 
 ```
 $ sudo adduser grader
 ```
 
-##### Add a sudoers file to "grader"
+#### Add a sudoers file to "grader"
 
 ```
 $ sudo nano /etc/sudoers.d/grader
@@ -86,19 +86,19 @@ _Add to this file:_
 grader ALL=(ALL:ALL) ALL
 ```
 
-##### Access and copy the public key already set up for user "root"
+#### Access and copy the public key already set up for user "root"
 
 ```
 $ sudo cat /home/root/.ssh/authorized_keys
 ```
 
-##### Paste this public key into the authorized_keys file for user "grader"
+#### Paste this public key into the authorized_keys file for user "grader"
 
 ```
 $ sudo nano /home/grader/.ssh/authorized_keys
 ```
 
-##### Verify that you can now switch between these users successfully
+#### Verify that you can now switch between these users successfully
 
 ```
 $ su grader
@@ -114,7 +114,7 @@ $ passwd grader
 
 _We've now given_ `grader` _sudo access. Now, be sure to stay logged in as_ `grader`
 
-##### Remove the public key from the root user
+#### Remove the public key from the root user
 
 _Delete all the contents in the authorized keys file for root:_
 
@@ -126,7 +126,7 @@ _The root user can no longer log in using the provided key pair. Let's now disab
 
 ## Edit SSH configuration
 
-##### Change SSH default port and disable root login
+#### Change SSH default port and disable root login
 
 _Be sure to be logged in as_ `grader` _at this point._
 
@@ -156,7 +156,7 @@ $ ssh -i ~/.ssh/udacity_key.rsa grader@52.89.11.168 -p 2200
 
 _Use the Uncomplicated Firewall plugin to configure a simple firewall._
 
-##### Configure allowed connections:
+#### Configure allowed connections:
 
 ```
 $ sudo ufw default deny incoming
@@ -173,7 +173,7 @@ $ sudo ufw allow 123
 $ sudo ufw allow 123/tcp
 ```
 
-##### Enable firewall
+#### Enable firewall
 
 **WARNING! If the previous steps were not successful, enabling the firewall may prevent ALL user access to this server!**
 
@@ -208,12 +208,12 @@ $ sudo nano /etc/timezone
 
 ## Install Apache HTTP Server and WSGI
 
-##### Install Apache:
+#### Install Apache:
 
 ```
 $ sudo apt-get install apache2
 ```
-##### Install WSGI for Apache:
+#### Install WSGI for Apache:
 
 _Install WSGI, an Apache helper for Python applications. (For more info, see_ [mod_wsgi](http://www.modwsgi.org/)_)_
 
@@ -221,7 +221,7 @@ _Install WSGI, an Apache helper for Python applications. (For more info, see_ [m
 $ sudo apt-get install libapache2-mod-wsgi
 ```
 
-##### Configure Apache to handle requests using the WSGI module
+#### Configure Apache to handle requests using the WSGI module
 
 ```
 $ sudo nano /etc/apache2/sites-enabled/000-default.conf
@@ -239,7 +239,7 @@ _This line will tell Apache to handle all URLs with the Python script_ `myapp.ws
 WSGIScriptAlias /myapp /var/www/html/myapp.wsgi
 ```
 
-##### Restart Apache
+#### Restart Apache
 
 ```
 $ sudo apache2ctl restart
@@ -255,17 +255,17 @@ _Remote DB connections do not need to be allowed in this case. Since the databas
 
 ## Setup Git
 
-##### Install
+#### Install
 
 ```
 $ sudo apt-get install git-all
 ```
-##### Configure a Git user
+#### Configure a Git user
 
 ```
 $ git config --global user.name "<name>"
 ```
-##### Configure a Git email
+#### Configure a Git email
 
 ```
 $ git config --global user.email "<name>"
