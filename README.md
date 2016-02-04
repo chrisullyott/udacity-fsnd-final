@@ -292,6 +292,8 @@ rm -rf <folderName>
 
 [Udacity Getting Started Guide](https://docs.google.com/document/d/1J0gpbuSlcFa2IQScrTIqI6o3dice-9T7v8EDNjJDfUI/pub)
 
+[stueken's project example](https://github.com/stueken/FSND-P5_Linux-Server-Configuration)
+
 [Udacity Forums](https://discussions.udacity.com/t/linux-server-configuration-final-sql-alchemy-v-psql/44448)
 
 [Digital Ocean - Initial Server Setup with Ubuntu 12.04](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-12-04)
