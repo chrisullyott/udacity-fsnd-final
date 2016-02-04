@@ -280,6 +280,14 @@ $ cd /var/www
 $ sudo git clone https://github.com/chrisullyott/udacity-fsnd-final.git catalog
 ```
 
+# Install app dependencies
+
+$ sudo apt-get install python-setuptools
+$ sudo apt-get install python-pip
+$ sudo pip install Flask
+
+
+
 # Helpful commands
 
 Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))
