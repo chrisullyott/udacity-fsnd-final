@@ -98,6 +98,8 @@ $ sudo cat /home/root/.ssh/authorized_keys
 $ sudo nano /home/grader/.ssh/authorized_keys
 ```
 
+_The matching public key is also available in this repository, as_ `ssh-rsa.pub`_._
+
 #### Verify that you can now switch between these users successfully
 
 ```
@@ -230,14 +232,12 @@ $ sudo nano /etc/apache2/sites-enabled/000-default.conf
 _Append this line to the file, just before the closing_ `</VirtualHost>` _tag:_
 
 ```
-WSGIScriptAlias / /var/www/html/myapp.wsgi
+WSGIScriptAlias / /var/www/catalog/runtime.wsgi
 ```
 
-_This line will tell Apache to handle all URLs with the Python script_ `myapp.wsgi`_. If you would instead like to host this application at a different URL, you also could have entered:_
+_This line will tell Apache to handle all URLs with the Python script_ `myapp.wsgi`_._
 
-``` 
-WSGIScriptAlias /myapp /var/www/html/myapp.wsgi
-```
+_Before saving this file, also change the_ `DocumentRoot` _from "/var/www/html" to "/var/www/catalog", as this will be the directory used for the project code._
 
 #### Restart Apache
 
@@ -253,7 +253,7 @@ $ sudo apt-get install postgresql
 
 _Remote DB connections do not need to be allowed in this case. Since the database will also be hosted on this machine._
 
-## Setup Git
+## Setup Git and project repository
 
 #### Install
 
@@ -271,6 +271,22 @@ $ git config --global user.name "<name>"
 $ git config --global user.email "<name>"
 ```
 
+#### Download the repository 
+
+_Clone this project's code into a folder called_ `catalog`
+
+```
+$ cd /var/www
+$ sudo git clone https://github.com/chrisullyott/udacity-fsnd-final.git catalog
+```
+
+# Helpful commands
+
+Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))
+
+```
+rm -rf <folderName>
+```
 
 # Helpful Resources
 
