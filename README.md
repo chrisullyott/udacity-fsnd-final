@@ -280,19 +280,18 @@ _Before installing, go ahead and_ `cd` _into "/var/www/catalog/catalog", where o
 |-----------------------venv
 |----------------catalog.wsgi
 ```
-_Install these items:_
-#### PIP, environments
+#### Install PIP
 
 ```
 $ sudo apt-get install python-pip
-$ sudo pip install virtualenv
 ```
 
-#### The virtual environment
+#### Create virtual environment
 
 _Create a virtual environment with **virtualenv**. Your environment's name can be "venv" or anything._
 
 ```
+$ sudo pip install virtualenv
 $ sudo virtualenv venv
 ```
 _Now activate this environment_
@@ -390,9 +389,7 @@ _Ok, now test the app!_
 $ sudo python __init__.py 
 ```
 
-# ### DONEZO ########################  #########################
-
-# Helpful commands
+# Helpful commands used
 
 View Apache's error logs
 
@@ -406,7 +403,7 @@ Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-d
 $ sudo rm -rf <folderName>
 ```
 
-# Other Helpful Resources
+# Other resources used
 
 [Digital Ocean - How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
@@ -419,8 +416,6 @@ $ sudo rm -rf <folderName>
 [stueken's project example](https://github.com/stueken/FSND-P5_Linux-Server-Configuration)
 
 [Udacity Forums](https://discussions.udacity.com/t/linux-server-configuration-final-sql-alchemy-v-psql/44448)
-
-[Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 [Error message when I run sudo: unable to resolve host (none)](http://askubuntu.com/questions/59458/error-message-when-i-run-sudo-unable-to-resolve-host-none)
 
