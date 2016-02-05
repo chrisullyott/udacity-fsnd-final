@@ -1,16 +1,14 @@
 # App Details
 
-**IP address**
-```
-52.89.11.168
-```
+#### IP address
 
-**App URL**
-```
-http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/
-```
+`52.89.11.168`
 
-**Login**
+#### App URL
+
+[http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
+
+#### Login
 
 _Place the provided Udacity private key file in your local_ `~/.ssh` _directory, and run:_
 
@@ -18,16 +16,14 @@ _Place the provided Udacity private key file in your local_ `~/.ssh` _directory,
 ssh -i ~/.ssh/udacity_key.rsa grader@52.89.11.168 -p 2200
 ```
 
-_As a security precaution, log in as_ `root` _has been disabled. However,_ `grader` _has been given sudo access._
+_As a security precaution,_ `root` _login has been disabled. However, the user_ `grader` _has been given sudo access._
 
 
-# Dependencies
-
-
-
-# Server setup steps taken
+# Server Setup Steps!
 
 _Here are the steps I personally took to complete this project. There are a lot of steps!_
+
+## 1. Initialize Amazon AWS server
 
 #### Create an Amazon AWS virtual machine and get the private SSH key, VM IP address
 
@@ -41,7 +37,7 @@ https://www.udacity.com/account#!/development_environment
 $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
 ```
 
-## Update server 
+## 2. Update the server 
 
 #### View updatable packages
 
@@ -61,9 +57,11 @@ $ sudo apt-get upgrade
 $ sudo apt-get upgrade --fix-missing
 ```
 
-## Create new sudo-enabled user
+## 3. Create new sudo-enabled user
 
-#### Install "finger" app (not required but helpful for user management)
+#### Install "finger" app
+
+_Not required, but helpful for user management_
 
 ```
 $ sudo sudo apt-get install finger
@@ -75,18 +73,18 @@ $ sudo sudo apt-get install finger
 $ sudo adduser grader
 ```
 
-#### Add a sudoers file to "grader"
+#### Add a sudoers file for "grader"
 
 ```
 $ sudo nano /etc/sudoers.d/grader
 ```
-_Add to this file:_
+_Add to this line to the sudoers file:_
 
 ```
 grader ALL=(ALL:ALL) ALL
 ```
 
-#### Access and copy the public key already set up for user "root"
+#### Access and copy the existing public key for user "root"
 
 ```
 $ sudo cat /home/root/.ssh/authorized_keys
@@ -98,7 +96,7 @@ $ sudo cat /home/root/.ssh/authorized_keys
 $ sudo nano /home/grader/.ssh/authorized_keys
 ```
 
-_The matching public key is also available in this repository, as_ `ssh-rsa.pub`_._
+_The public key is also available in this repository, as_ `ssh-rsa.pub`_._
 
 #### Verify that you can now switch between these users successfully
 
@@ -114,23 +112,22 @@ _Reset the password for the user "grader" and use a complex, secure password:_
 $ passwd grader
 ```
 
-_We've now given_ `grader` _sudo access. Now, be sure to stay logged in as_ `grader`
+_We've now given_ `grader` _sudo access. Stay logged in as_ `grader` throughout the rest of the setup.
 
-#### Remove the public key from the root user
+## 4. Disable root login
 
-_Delete all the contents in the authorized keys file for root:_
+#### Remove SSH key from root user
+
+_Delete all the contents in the authorized keys file for root._
 
 ``` 
 $ sudo nano /home/root/.ssh/authorized_keys
 ```
-_The root user can no longer log in using the provided key pair. Let's now disable SSH access for root altogether in the following steps._
+_The root user can no longer log in using the provided SSH keys. Let's now disable SSH access for root altogether in the following steps._
 
+#### Change default SSH port and disable root login
 
-## Edit SSH configuration
-
-#### Change SSH default port and disable root login
-
-_Be sure to be logged in as_ `grader` _at this point._
+_Remember, be sure to be logged in as_ `grader` _at this point._
 
 ```
 $ sudo nano /etc/ssh/sshd_config
@@ -154,9 +151,9 @@ _This will restart the SSH service and apply our previous login changes. From no
 $ ssh -i ~/.ssh/udacity_key.rsa grader@52.89.11.168 -p 2200
 ```
 
-## Edit ports and firewall
+## 5. Edit ports and firewall
 
-_Use the Uncomplicated Firewall plugin to configure a simple firewall._
+_Use the Uncomplicated Firewall tool to configure a simple firewall for the virtual machine._
 
 #### Configure allowed connections:
 
@@ -179,13 +176,11 @@ $ sudo ufw allow 123/tcp
 
 **WARNING! If the previous steps were not successful, enabling the firewall may prevent ALL user access to this server!**
 
-_Verify that the aforementioned steps were successful. You can view all entered UFW rules using the following command:_
+_To verify the aforementioned steps were successful, you can view all entered UFW rules using the following command (tip from [askubuntu.com](http://askubuntu.com/questions/30781/see-configured-rules-even-when-inactive)):_
 
 ```
 $ sudo grep '^### tuple' /lib/ufw/user*.rules
 ```
-
-(Tip from [http://askubuntu.com/](http://askubuntu.com/questions/30781/see-configured-rules-even-when-inactive))
 
 _When you are ready, activate the firewall and check its status:_
 
@@ -194,36 +189,39 @@ $ sudo ufw enable
 $ sudo ufw status
 ```
 
-## Set timezone to UTC
+## 6. Set timezone to UTC
 
-_Check the current timezone with the date command:
+_Check the current timezone with the_ `date` _command:_
 ```
 $ date
 Mon Feb  1 12:35:12 UTC 2016
 ```
 
-_If timezone is not_ `UTC`_, change it here in the timezone file:_
+_If timezone is not **UTC**, change it here in the timezone file:_
 
 ```
 $ sudo nano /etc/timezone
 ```
 
-## Install Apache HTTP Server and WSGI
+## 7. Install Apache HTTP Server and WSGI
 
-#### Install Apache:
+_Many of the following steps follow Digital Ocean's tutorial, [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)._ It is not recommended to skip any of these steps!
+
+#### Install Apache 2:
 
 ```
 $ sudo apt-get install apache2
 ```
 #### Install WSGI for Apache:
 
-_Install WSGI, an Apache helper for Python applications. (For more info, see_ [mod_wsgi](http://www.modwsgi.org/)_)_
+_WSGI is an Apache helper for Python applications. (For more info, see [mod_wsgi](http://www.modwsgi.org/))_
 
 ```
+$ sudo apt-get install python-setuptools
 $ sudo apt-get install libapache2-mod-wsgi
 ```
 
-#### Enable mod_wsgi if it isn't already enabled
+#### Enable mod_wsgi, if it isn't already
 
 ```
 $ sudo a2enmod wsgi 
@@ -232,87 +230,112 @@ $ sudo a2enmod wsgi
 #### Restart Apache
 
 ```
-$ sudo apache2ctl restart
+$ sudo service apache2 restart
 ```
+_At this point, visiting the app URL in the browser should bring us to an Apache landing page, saying, "It works!"_
 
-## Install PostreSQL
+## 8. Install Git and load app 
 
-```
-$ sudo apt-get install postgresql
-```
-
-_Remote DB connections do not need to be allowed in this case. Since the database will also be hosted on this machine._
-
-## Setup Git and project repository
-
-#### Install
+#### Install Git
 
 ```
 $ sudo apt-get install git-all
 ```
-#### Configure a Git user
-
+_If you like, you may configure the Git installation with..._
 ```
-$ git config --global user.name "<name>"
-```
-#### Configure a Git email
-
-```
-$ git config --global user.email "<name>"
+$ git config --global user.name "<YOUR NAME>"
+$ git config --global user.email "<YOUR EMAIL ADDRESS>"
 ```
 
 #### Download the repository 
 
-_Clone this project's code into a folder called_ `catalog`
+_Create a folder inside the_ `www` _folder called "catalog" and_ `cd` _into this folder._
+
+```
+$ cd /var/www
+$ sudo mkdir catalog
+$ cd catalog
+```
+
+_Clone this project's code into a new folder called "catalog". Yes, being a little redundant here, but we're following the [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps) method._
 
 ```
 $ cd /var/www/catalog
 $ sudo git clone https://github.com/chrisullyott/udacity-fsnd-final.git catalog
 ```
+_Your cloned repository will now live inside "/var/www/catalog/catalog". This repo contains all of the basic components of a Flask app._
 
-# Install the app and its dependencies
+## 9. Install app and its dependencies
 
-Thanks to [Digital Ocean tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+_Before installing, go ahead and_ `cd` _into "/var/www/catalog/catalog", where our app lives. Just to prepare you, when we're done with this, our app's file structure will look like this:_
 
-$ sudo apt-get install python-setuptools
+```
+|var
+|----www
+|--------catalog
+|----------------catalog
+|-----------------------__init__.py
+|-----------------------static
+|-----------------------templates
+|-----------------------venv
+|----------------catalog.wsgi
+```
+_Install these items:_
+#### PIP, environments
+
+```
 $ sudo apt-get install python-pip
-$ sudo pip install Flask
+$ sudo pip install virtualenv
+```
 
-cd into the app folder and...
-$ sudo pip install virtualenv 
+#### The virtual environment
+
+_Create a virtual environment with **virtualenv**. Your environment's name can be "venv" or anything._
+
+```
 $ sudo virtualenv venv
-$ source venv/bin/activate
+```
+_Now activate this environment_
+```
+$ sudo source venv/bin/activate 
+```
+_With the virtual environment activated, it's time to install the app's dependencies inside it._
 
-source venv/bin/activate
-sudo pip install httplib2
-sudo pip install requests
-sudo pip install oauth2client
-sudo pip install sqlalchemy
-sudo pip install Flask-SQLAlchemy
-sudo pip install psycopg2
-sudo apt-get install python-psycopg2
+#### Flask and DB software
+```
+$ sudo pip install Flask
+$ sudo pip install sqlalchemy
+$ sudo pip install Flask-SQLAlchemy
+$ sudo pip install psycopg2
+$ sudo apt-get install python-psycopg2
+$ sudo apt-get install postgresql
+```
 
-add files with google client secrets...
-$ sudo nano google_client_secrets.json
-$ sudo nano fb_client_secrets.json
+#### Other needs
+```
+$ sudo pip install oauth2client
+$ sudo pip install httplib2
+$ sudo pip install requests
+```
+## 10. Configure a Virtual Host in Apache
 
-test app...
-sudo python finalproject.py 
-
-create apache virtual host...
+_Create apache virtual host..._
+```
 $ sudo nano /etc/apache2/sites-available/catalog.conf
+```
 
+_Add the following rules. "52.89.11.168" is the IP address of the app above._
 ```
 <VirtualHost *:80>
     ServerName 52.89.11.168
     ServerAdmin admin@mywebsite.com
-    WSGIScriptAlias / /var/www/catalog/runtime.wsgi
-    <Directory /var/www/catalog/>
+    WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+    <Directory /var/www/catalog/catalog/>
             Order allow,deny
             Allow from all
     </Directory>
-    Alias /static /var/www/catalog/static
-    <Directory /var/www/catalog/static/>
+    Alias /static /var/www/catalog/catalog/static
+    <Directory /var/www/catalog/catalog/static/>
             Order allow,deny
             Allow from all
     </Directory>
@@ -320,39 +343,74 @@ $ sudo nano /etc/apache2/sites-available/catalog.conf
     LogLevel warn
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-
+```
+_Now, enable this virtual host:_
+```
+$ sudo a2ensite catalog
 ```
 
-enable virtual host...
-$ sudo a2ensite catalog
-
-configure WSGI file...
+## 11. Configure the WSGI file
+```
+$ cd /var/www/catalog
+$ sudo nano catalog.wsgi 
+```
+_Add the following to this file:_
 
 ```
 #!/usr/bin/python
 import sys
 import logging
 logging.basicConfig(stream=sys.stderr)
-sys.path.insert(0,"/var/www/catalog/") 
+sys.path.insert(0,"/var/www/catalog/")
 
-import catalog as application
+from catalog import app as application
 application.secret_key = 'super_secret_key'
 ```
 
+_This is a good time to restart apache:_
+```
+$ sudo service apache2 restart 
+```
 
+## 12. Required app changes
 
+#### Add client secret files
+_The secrets files don't exist in this repository for security reasons._
+```
+$ cd /var/www/catalog/catalog
+$ sudo mkdir oauth
+$ sudo nano google_client_secrets.json
+$ sudo nano fb_client_secrets.json
+```
 
+_Ok, now test the app!_
+```
+$ sudo python __init__.py 
+```
 
+# ### DONEZO ########################  #########################
 
 # Helpful commands
+
+View Apache's error logs
+
+```
+$ sudo cat /var/log/apache2/error.log
+```
 
 Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))
 
 ```
-rm -rf <folderName>
+$ sudo rm -rf <folderName>
 ```
 
-# Helpful Resources
+# Other Helpful Resources
+
+[Digital Ocean - How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+
+[Digital Ocean - Initial Server Setup with Ubuntu 12.04](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-12-04)
+
+[Ubuntu - Uncomplicated Firewall](https://help.ubuntu.com/community/UFW)
 
 [Udacity Getting Started Guide](https://docs.google.com/document/d/1J0gpbuSlcFa2IQScrTIqI6o3dice-9T7v8EDNjJDfUI/pub)
 
@@ -360,8 +418,7 @@ rm -rf <folderName>
 
 [Udacity Forums](https://discussions.udacity.com/t/linux-server-configuration-final-sql-alchemy-v-psql/44448)
 
-[Digital Ocean - Initial Server Setup with Ubuntu 12.04](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-12-04)
-
 [Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 [Error message when I run sudo: unable to resolve host (none)](http://askubuntu.com/questions/59458/error-message-when-i-run-sudo-unable-to-resolve-host-none)
+
