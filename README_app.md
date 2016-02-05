@@ -51,10 +51,10 @@ Run the web app finalproject.py:
 $ python finalproject.py
 ```
 
-The app runs on port `2200`:
+The app runs on port `5000`:
 
 ```
-http://52.89.11.168:2200/
+http://52.89.11.168:5000/
 ```
 
 ## API Endpoints
@@ -64,20 +64,20 @@ Available in JSON and XML at the following endpoints:
 List all restaurants:
 
 ```
-http://52.89.11.168:2200/restaurants/json
-http://52.89.11.168:2200/restaurants/xml
+http://52.89.11.168:5000/restaurants/json
+http://52.89.11.168:5000/restaurants/xml
 ```
 
 List all menu items for a given RESTAURANT_ID:
 
 ```
-http://52.89.11.168:2200/restaurants/<RESTAURANT ID>/menu/json
-http://52.89.11.168:2200/restaurants/<RESTAURANT ID>/menu/xml
+http://52.89.11.168:5000/restaurants/<RESTAURANT ID>/menu/json
+http://52.89.11.168:5000/restaurants/<RESTAURANT ID>/menu/xml
 ```
 
 List a single menu item:
 
 ```
-http://52.89.11.168:2200/restaurants/<RESTAURANT ID>/menu/<ITEM ID>/json
-http://52.89.11.168:2200/restaurants/<RESTAURANT ID>/menu/<ITEM ID>/xml
+http://52.89.11.168:5000/restaurants/<RESTAURANT ID>/menu/<ITEM ID>/json
+http://52.89.11.168:5000/restaurants/<RESTAURANT ID>/menu/<ITEM ID>/xml
 ```

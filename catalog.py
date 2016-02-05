@@ -29,7 +29,8 @@ CLIENT_ID = json.loads(
   open('oauth/google_client_secrets.json', 'r').read())['web']['client_id']
 
 # !libraries
-import dicttoxml
+# import dicttoxml
+# not working for some reason
 
 # !helpers
 from pprint import pprint
@@ -481,4 +482,4 @@ def restaurantMenuItemXML(restaurant_id, menu_item_id):
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
   app.debug = True
-  app.run(host='0.0.0.0', port=2200)
+  app.run(host='0.0.0.0', port=5000)

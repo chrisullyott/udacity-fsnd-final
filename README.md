@@ -223,6 +223,12 @@ _Install WSGI, an Apache helper for Python applications. (For more info, see_ [m
 $ sudo apt-get install libapache2-mod-wsgi
 ```
 
+#### Enable mod_wsgi if it isn't already enabled
+
+```
+$ sudo a2enmod wsgi 
+```
+
 #### Configure Apache to handle requests using the WSGI module
 
 ```
@@ -276,15 +282,81 @@ $ git config --global user.email "<name>"
 _Clone this project's code into a folder called_ `catalog`
 
 ```
-$ cd /var/www
+$ cd /var/www/catalog
 $ sudo git clone https://github.com/chrisullyott/udacity-fsnd-final.git catalog
 ```
 
-# Install app dependencies
+# Install the app and its dependencies
+
+Thanks to [Digital Ocean tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
 $ sudo apt-get install python-setuptools
 $ sudo apt-get install python-pip
 $ sudo pip install Flask
+
+cd into the app folder and...
+$ sudo pip install virtualenv 
+$ sudo virtualenv venv
+$ source venv/bin/activate
+
+test app...
+sudo python finalproject.py 
+
+source venv/bin/activate
+sudo pip install httplib2
+sudo pip install requests
+sudo pip install oauth2client
+sudo pip install sqlalchemy
+sudo pip install Flask-SQLAlchemy
+sudo pip install psycopg2
+sudo apt-get install python-psycopg2
+
+add files with google client secrets...
+$ sudo nano google_client_secrets.json
+$ sudo nano fb_client_secrets.json
+
+create apache virtual host...
+$ sudo nano /etc/apache2/sites-available/catalog.conf
+
+```
+<VirtualHost *:80>
+    ServerName 52.89.11.168
+    ServerAdmin admin@mywebsite.com
+    WSGIScriptAlias / /var/www/catalog/runtime.wsgi
+    <Directory /var/www/catalog/>
+            Order allow,deny
+            Allow from all
+    </Directory>
+    Alias /static /var/www/catalog/static
+    <Directory /var/www/catalog/static/>
+            Order allow,deny
+            Allow from all
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+```
+
+enable virtual host...
+$ sudo a2ensite catalog
+
+configure WSGI file...
+
+```
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/catalog/") 
+
+import catalog as application
+application.secret_key = 'super_secret_key'
+```
+
+
+
 
 
 
