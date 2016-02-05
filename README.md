@@ -229,22 +229,6 @@ $ sudo apt-get install libapache2-mod-wsgi
 $ sudo a2enmod wsgi 
 ```
 
-#### Configure Apache to handle requests using the WSGI module
-
-```
-$ sudo nano /etc/apache2/sites-enabled/000-default.conf
-```
-
-_Append this line to the file, just before the closing_ `</VirtualHost>` _tag:_
-
-```
-WSGIScriptAlias / /var/www/catalog/runtime.wsgi
-```
-
-_This line will tell Apache to handle all URLs with the Python script_ `myapp.wsgi`_._
-
-_Before saving this file, also change the_ `DocumentRoot` _from "/var/www/html" to "/var/www/catalog", as this will be the directory used for the project code._
-
 #### Restart Apache
 
 ```
@@ -299,9 +283,6 @@ $ sudo pip install virtualenv
 $ sudo virtualenv venv
 $ source venv/bin/activate
 
-test app...
-sudo python finalproject.py 
-
 source venv/bin/activate
 sudo pip install httplib2
 sudo pip install requests
@@ -314,6 +295,9 @@ sudo apt-get install python-psycopg2
 add files with google client secrets...
 $ sudo nano google_client_secrets.json
 $ sudo nano fb_client_secrets.json
+
+test app...
+sudo python finalproject.py 
 
 create apache virtual host...
 $ sudo nano /etc/apache2/sites-available/catalog.conf
