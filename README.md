@@ -372,6 +372,8 @@ _This is a good time to restart apache:_
 $ sudo service apache2 restart 
 ```
 
+_The warning "Could not reliably determine the VPS's fully qualified domain name..." can be safely ignored, or even turned off [askubuntu.com](http://askubuntu.com/questions/256013/could-not-reliably-determine-the-servers-fully-qualified-domain-name)_
+
 ## 12. Required app changes
 
 #### Add client secret files
