@@ -13,7 +13,7 @@
 _Place the provided Udacity private key file in your local_ `~/.ssh` _directory, and run:_
 
 ```
-ssh -i ~/.ssh/udacity_key.rsa grader@52.89.11.168 -p 2200
+$ ssh -i ~/.ssh/grader.rsa grader@52.89.11.168 -p 2200
 ```
 
 _As a security precaution,_ `root` _login has been disabled. However, the user_ `grader` _has been given sudo access._
@@ -33,9 +33,15 @@ https://www.udacity.com/account#!/development_environment
 
 #### Log in as the default root user
 
+_First, download the supplied private key to your computer, chown it, and use it to log in:_
+
 ```
+$ chmod 600 ~/.ssh/udacity_key.rsa
 $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
 ```
+
+_Verify that you can log in._
+
 
 ## 2. Update the server
 
@@ -73,7 +79,7 @@ $ sudo sudo apt-get install finger
 $ sudo adduser grader
 ```
 
-#### Add a sudoers file for "grader"
+#### Create a sudoers file for "grader"
 
 ```
 $ sudo nano /etc/sudoers.d/grader
@@ -84,19 +90,24 @@ _Add to this line to the sudoers file:_
 grader ALL=(ALL:ALL) ALL
 ```
 
-#### Access and copy the existing public key for user "root"
-
+_Back on the local machine, generate a new SSH keypair with a good passphrase. I called mine "grader"._
 ```
-$ sudo cat /home/root/.ssh/authorized_keys
+$ ssh-keygen
 ```
 
-#### Paste this public key into the authorized_keys file for user "grader"
+_Rename the PRIVATE KEY file "grader" to_ `grader.rsa`
 
+_Copy the contents of the public key (the "grader.pub" file)_
+
+_SSH into the server as root again, and add the new public key to user_ `grader`
 ```
+$ sudo mkdir /home/grader/.ssh
 $ sudo nano /home/grader/.ssh/authorized_keys
 ```
 
-_The public key is also available in this repository, as_ `ssh-rsa.pub`_._
+_Paste the public key in this file and save._
+
+_The public key is also available in this repository, as_ `grader.pub`_._
 
 #### Verify that you can now switch between these users successfully
 
@@ -148,7 +159,7 @@ $ sudo service ssh restart
 _This will restart the SSH service and apply our previous login changes. From now on, you will need to log in with:_
 
 ```
-$ ssh -i ~/.ssh/udacity_key.rsa grader@52.89.11.168 -p 2200
+$ ssh -i ~/.ssh/grader.rsa grader@52.89.11.168 -p 2200
 ```
 
 ## 5. Edit ports and firewall
