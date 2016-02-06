@@ -455,7 +455,14 @@ $ sudo nano /var/www/catalog/catalog/__init__.py
 engine = create_engine("postgresql://catalog:catalog@localhost/catalog")
 ```
 
-_If not already changed, use the full path to the_ `oauth` _directory wherever it's used:_
+```
+$ sudo nano /var/www/catalog/catalog/lotsofmenus.py
+
+# engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine("postgresql://catalog:catalog@localhost/catalog")
+```
+
+_If not already changed, use the full path to the_ `oauth` _directory wherever it's used. There is a cleaner way to do this, but using the_ `os`__
 ```
 $ sudo nano /var/www/catalog/catalog/__init__.py
 
@@ -464,20 +471,16 @@ $ /var/www/catalog/catalog/oauth/google_client_secrets.json
 ```
 
 _Now, run the database setup!_
-
 ```
 $ sudo python database_setup.py
+$ sudo python lotsofmenus.py
 ```
 
+## 13. Reconfigure Google OAuth for connected services
 
+#### Add client secret files to app
 
-
-
-
-## NUMBER. Required app changes
-
-#### Add client secret files
-_The secrets files don't exist in this repository for security reasons._
+_The secrets files don't exist in this repository for security reasons, so we'll need to add them manually._
 ```
 $ cd /var/www/catalog/catalog
 $ sudo mkdir oauth
@@ -485,79 +488,71 @@ $ sudo nano google_client_secrets.json
 $ sudo nano fb_client_secrets.json
 ```
 
-## NUMBER. Test
+#### Configure Google OAuth
 
-_Ok, now test the app!_
+[Google App Credentials](https://console.developers.google.com/apis/credentials?project=udacity-restaurant-menu-1159)
+
+_Add to Authorized JavaScript origins:_
+```
+http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com
+```
+
+_Add to Authorized redirect URIs:_
+```
+http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/restaurants
+```
+
+#### Configure Facebook OAuth
+
+[Facebook App Dashboard](https://developers.facebook.com/apps/968671983206543/dashboard/)
+
+[Facebook App OAuth Setup](https://developers.facebook.com/apps/968671983206543/settings/advanced/)
+
+_Change authorized app domain and allowed OAuth URIs:_
+```
+ec2-52-89-11-168.us-west-2.compute.amazonaws.com
+```
+
+## 14. Additional security
+
+_Let's be sure to prevent public access to a few directories via htaccess. This can be done with file permissions or in the Apache configuration file for this site also, but starting an .htaccess file could be useful in the future. Also, this helps keep rules for app-specific directories in one place._
+```
+$ sudo nano /var/www/catalog/catalog/.htaccess
+
+RedirectMatch 404 /\.git  
+RedirectMatch 404 /\oauth  
+```
+
+## 15. Run!
+
+_Ok, now let's run the app! I would say "test" the app, but that doesn't sound as hopeful!_
 ```
 $ sudo python __init__.py
 ```
-_There should be no Python errors output here._
 
 _Load the app at:_
 
 [http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
 
 
-
-
-
-# Database stuff not used:
-
-
-#### Create database user
-
-_Create a new DB user "catalog" in PostgreSQL_
-
-```
-$ sudo -u postgres createuser -s catalog
-```
-
-_Create a new DB "catalog"_
-
-```
-$ sudo createdb -U catalog --locale=en_US.utf-8 -E utf-8 -O catalog catalog -T template0
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Soon Todo's:
-
-- RedirectMatch 404 /\.git
-
-
-
-# Future Todo's:
-
-- Add better permissions for PostgreSQL users
-
-
-
-# Helpful commands used
-
-View Apache's error logs
-
+_Check the error logs for any mention of problems:_
 ```
 $ sudo cat /var/log/apache2/error.log
 ```
 
-Delete user
+# Helpful commands used
 
+**View Apache's error logs**
+```
+$ sudo cat /var/log/apache2/error.log
+```
+
+**Delete user**
 ```
 $ sudo userdel <username>
 ```
 
-Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))
-
+**Delete an entire directory** ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))
 ```
 $ sudo rm -rf <folderName>
 ```
@@ -577,4 +572,5 @@ $ sudo rm -rf <folderName>
 [Udacity Forums](https://discussions.udacity.com/t/linux-server-configuration-final-sql-alchemy-v-psql/44448)
 
 [Error message when I run sudo: unable to resolve host (none)](http://askubuntu.com/questions/59458/error-message-when-i-run-sudo-unable-to-resolve-host-none)
+
 
