@@ -57,6 +57,7 @@ class User(Base):
 ######### /classes ##########
 
 
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+# engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('postgresql://catalog:<YOUR DB PASSWORD>@localhost/catalog')
 
 Base.metadata.create_all(engine)

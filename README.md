@@ -307,10 +307,9 @@ $ sudo pip install sqlalchemy
 $ sudo pip install Flask-SQLAlchemy
 $ sudo pip install psycopg2
 $ sudo apt-get install python-psycopg2
-$ sudo apt-get install postgresql
 ```
 
-#### Other needs
+#### More app software
 ```
 $ sudo pip install oauth2client
 $ sudo pip install httplib2
@@ -323,7 +322,7 @@ _Create apache virtual host..._
 $ sudo nano /etc/apache2/sites-available/catalog.conf
 ```
 
-_Add the following rules. "52.89.11.168" is the IP address of the app above._
+_Add the following rules to the configuration file. "52.89.11.168" is the IP address of the app above._
 ```
 <VirtualHost *:80>
     ServerName 52.89.11.168
@@ -373,7 +372,78 @@ $ sudo service apache2 restart
 
 _The warning "Could not reliably determine the VPS's fully qualified domain name..." can be safely ignored, or even turned off [askubuntu.com](http://askubuntu.com/questions/256013/could-not-reliably-determine-the-servers-fully-qualified-domain-name)_
 
-## 12. Required app changes
+## 12. Configure PostgreSQL
+
+_Since we will be running the database on this server, we will need to make some changes!_
+
+_From [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)_
+
+#### Check that PostreSQL is installed
+
+_This should return the location of the Postgres binary. If not, go back and install PostreSQL._
+```
+$ which psql
+```
+
+#### Install PostgreSQL
+```
+$ sudo apt-get install postgresql postgresql-contrib
+```
+
+#### Secure PostgreSQL
+```
+$ sudo nano /etc/postgresql/9.3/main/pg_hba.conf
+```
+
+_Because of the handy "peer" authentication feature, PostgreSQL automatically grants access to the "postres" user. This is helpful at first, but let's not use this for our app, for security reasons._
+
+_In this file, first remove any specified connections that aren't local. (After installation, there weren't any to begin with, but it's good practice to check)._
+
+_Create a user specifically for the 'catalog' app and switch to this user:_
+```
+$ sudo su - postgres 
+$ psql
+postgres=# CREATE ROLE catalog;
+postgres=# ALTER USER 'catalog' WITH PASSWORD '<your password>';
+postgres=# SET ROLE catalog;
+```
+
+_Create the app database with this user._ 
+```
+postgres=# CREATE DATABASE catalogdb WITH OWNER catalog;
+```
+
+_Exit, and restart PostgreSQL_
+```
+postgres=# \q
+$ sudo service postgresql restart
+```
+
+#### Update password for user "postgres"
+```
+$ sudo passwd postgres
+```
+
+#### Create database user
+
+_Create a new DB user "catalog" in PostgreSQL_
+
+```
+$ sudo -u postgres createuser -s catalog
+```
+
+_Create a new DB "catalogdb"_
+
+```
+$ sudo createdb -U catalog --locale=en_US.utf-8 -E utf-8 -O catalog catalogdb -T template0
+```
+
+My sqlalchemy string is (yes, everything is called catalog): engine = create_engine("postgresql+psycopg2://catalog:catalog@localhost/catalog")
+
+
+
+
+## NUMBER. Required app changes
 
 #### Add client secret files
 _The secrets files don't exist in this repository for security reasons._
@@ -384,10 +454,27 @@ $ sudo nano google_client_secrets.json
 $ sudo nano fb_client_secrets.json
 ```
 
+## NUMBER. Test
+
 _Ok, now test the app!_
 ```
 $ sudo python __init__.py 
 ```
+_There should be no Python errors output here._
+
+_Load the app at:_
+
+[http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
+
+
+# Soon Todo's:
+
+- RedirectMatch 404 /\.git
+
+# Future Todo's:
+
+- Add better permissions for PostgreSQL users
+
 
 # Helpful commands used
 
