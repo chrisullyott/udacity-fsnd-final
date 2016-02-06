@@ -37,7 +37,7 @@ https://www.udacity.com/account#!/development_environment
 $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
 ```
 
-## 2. Update the server 
+## 2. Update the server
 
 #### View updatable packages
 
@@ -120,7 +120,7 @@ _We've now given_ `grader` _sudo access. Stay logged in as_ `grader` throughout 
 
 _Delete all the contents in the authorized keys file for root._
 
-``` 
+```
 $ sudo nano /home/root/.ssh/authorized_keys
 ```
 _The root user can no longer log in using the provided SSH keys. Let's now disable SSH access for root altogether in the following steps._
@@ -142,7 +142,7 @@ Change `PasswordAuthentication ...` to `PasswordAuthentication no`
 _Restart sshd:_
 
 ```
-$ sudo service ssh restart 
+$ sudo service ssh restart
 ```
 
 _This will restart the SSH service and apply our previous login changes. From now on, you will need to log in with:_
@@ -162,7 +162,7 @@ $ sudo ufw default deny incoming
 $ sudo ufw default allow outgoing
 ```
 
-``` 
+```
 $ sudo ufw allow ssh
 $ sudo ufw allow 2200
 $ sudo ufw allow 2200/tcp
@@ -212,6 +212,7 @@ _Many of the following steps follow Digital Ocean's tutorial, [How To Deploy a F
 ```
 $ sudo apt-get install apache2
 ```
+
 #### Install WSGI for Apache:
 
 _WSGI is an Apache helper for Python applications. (For more info, see [mod_wsgi](http://www.modwsgi.org/))_
@@ -222,19 +223,18 @@ $ sudo apt-get install libapache2-mod-wsgi
 ```
 
 #### Enable mod_wsgi, if it isn't already
-
 ```
-$ sudo a2enmod wsgi 
+$ sudo a2enmod wsgi
 ```
 
 #### Restart Apache
-
 ```
 $ sudo service apache2 restart
 ```
+
 _At this point, visiting the app URL in the browser should bring us to an Apache landing page, saying, "It works!"_
 
-## 8. Install Git and load app 
+## 8. Install Git and load app
 
 #### Install Git
 
@@ -247,7 +247,7 @@ $ git config --global user.name "<YOUR NAME>"
 $ git config --global user.email "<YOUR EMAIL ADDRESS>"
 ```
 
-#### Download the repository 
+#### Download the repository
 
 _Create a folder inside the_ `www` _folder called "catalog" and_ `cd` _into this folder._
 
@@ -263,6 +263,7 @@ _Clone this project's code into a new folder called "catalog". Yes, being a litt
 $ cd /var/www/catalog
 $ sudo git clone https://github.com/chrisullyott/udacity-fsnd-final.git catalog
 ```
+
 _Your cloned repository will now live inside "/var/www/catalog/catalog". This repo contains all of the basic components of a Flask app._
 
 ## 9. Install app and its dependencies
@@ -280,8 +281,8 @@ _Before installing, go ahead and_ `cd` _into "/var/www/catalog/catalog", where o
 |-----------------------venv
 |----------------catalog.wsgi
 ```
-#### Install PIP
 
+#### Install PIP
 ```
 $ sudo apt-get install python-pip
 ```
@@ -289,15 +290,16 @@ $ sudo apt-get install python-pip
 #### Create virtual environment
 
 _Create a virtual environment with **virtualenv**. Your environment's name can be "venv" or anything._
-
 ```
 $ sudo pip install virtualenv
 $ sudo virtualenv venv
 ```
+
 _Now activate this environment_
 ```
-$ sudo source venv/bin/activate 
+$ sudo source venv/bin/activate
 ```
+
 _With the virtual environment activated, it's time to install the app's dependencies inside it._
 
 #### Flask and DB software
@@ -315,6 +317,7 @@ $ sudo pip install oauth2client
 $ sudo pip install httplib2
 $ sudo pip install requests
 ```
+
 ## 10. Configure a Virtual Host in Apache
 
 _Create apache virtual host..._
@@ -350,10 +353,10 @@ $ sudo a2ensite catalog
 ## 11. Configure the WSGI file
 ```
 $ cd /var/www/catalog
-$ sudo nano catalog.wsgi 
+$ sudo nano catalog.wsgi
 ```
-_Add the following to this file:_
 
+_Add the following to this file:_
 ```
 #!/usr/bin/python
 import sys
@@ -367,7 +370,7 @@ application.secret_key = 'super_secret_key'
 
 _This is a good time to restart apache:_
 ```
-$ sudo service apache2 restart 
+$ sudo service apache2 restart
 ```
 
 _The warning "Could not reliably determine the VPS's fully qualified domain name..." can be safely ignored, or even turned off [askubuntu.com](http://askubuntu.com/questions/256013/could-not-reliably-determine-the-servers-fully-qualified-domain-name)_
@@ -391,54 +394,82 @@ $ sudo apt-get install postgresql postgresql-contrib
 ```
 
 #### Secure PostgreSQL
+
+_Because of the handy "peer" authentication feature, PostgreSQL automatically grants access to the "postres" user. This is helpful at first, but let's not use this for our app, for security reasons._
+
+_Open PostgreSQL config file:_
 ```
 $ sudo nano /etc/postgresql/9.3/main/pg_hba.conf
 ```
 
-_Because of the handy "peer" authentication feature, PostgreSQL automatically grants access to the "postres" user. This is helpful at first, but let's not use this for our app, for security reasons._
+_In this file, also remove any specified connections that aren't local. (After installation, there weren't any to begin with, but it's good practice to check)._
 
-_In this file, first remove any specified connections that aren't local. (After installation, there weren't any to begin with, but it's good practice to check)._
-
-_Create a user specifically for the 'catalog' app and switch to this user:_
+_Restart PostgreSQL_
 ```
-$ sudo su - postgres 
+$ sudo service postgresql restart
+```
+
+_Now change password for user "postgres"_
+```
+$ sudo passwd postgres
+```
+
+_Create PostgreSQL role for handling the DB, and choose a password (I just used "catalog" again to keep things simple):_
+```
+$ sudo su - postgres
 $ psql
 postgres=# CREATE ROLE catalog;
-postgres=# ALTER USER 'catalog' WITH PASSWORD '<your password>';
-postgres=# SET ROLE catalog;
+postgres=# ALTER USER catalog WITH PASSWORD 'catalog';
 ```
 
-_Create the app database with this user._ 
-```
-postgres=# CREATE DATABASE catalogdb WITH OWNER catalog;
+_Create the app database with this user._
+``` 
+postgres=# CREATE DATABASE catalog WITH OWNER catalog;
 ```
 
-_Exit, and restart PostgreSQL_
+_Revoke all access rights except to 'catalog' user:_
+```
+postgres=# \c catalog;
+postgres=# REVOKE ALL ON SCHEMA public FROM public;
+postgres=# GRANT ALL ON SCHEMA public TO catalog;
+```
+
+_Log out of PostgreSQL, and restart it_
 ```
 postgres=# \q
 $ sudo service postgresql restart
 ```
 
-#### Update password for user "postgres"
+_If not already changed, change the app's sqlite database setup to PostgreSQL:_
 ```
-$ sudo passwd postgres
-```
+$ sudo nano /var/www/catalog/catalog/database_setup.py
 
-#### Create database user
-
-_Create a new DB user "catalog" in PostgreSQL_
-
-```
-$ sudo -u postgres createuser -s catalog
+# engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine("postgresql://catalog:catalog@localhost/catalog")
 ```
 
-_Create a new DB "catalogdb"_
+```
+$ sudo nano /var/www/catalog/catalog/__init__.py
+
+# engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine("postgresql://catalog:catalog@localhost/catalog")
+```
+
+_If not already changed, use the full path to the_ `oauth` _directory wherever it's used:_
+```
+$ sudo nano /var/www/catalog/catalog/__init__.py
+
+$ # oauth/google_client_secrets.json
+$ /var/www/catalog/catalog/oauth/google_client_secrets.json
+```
+
+_Now, run the database setup!_
 
 ```
-$ sudo createdb -U catalog --locale=en_US.utf-8 -E utf-8 -O catalog catalogdb -T template0
+$ sudo python database_setup.py
 ```
 
-My sqlalchemy string is (yes, everything is called catalog): engine = create_engine("postgresql+psycopg2://catalog:catalog@localhost/catalog")
+
 
 
 
@@ -458,7 +489,7 @@ $ sudo nano fb_client_secrets.json
 
 _Ok, now test the app!_
 ```
-$ sudo python __init__.py 
+$ sudo python __init__.py
 ```
 _There should be no Python errors output here._
 
@@ -467,13 +498,48 @@ _Load the app at:_
 [http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
 
 
+
+
+
+# Database stuff not used:
+
+
+#### Create database user
+
+_Create a new DB user "catalog" in PostgreSQL_
+
+```
+$ sudo -u postgres createuser -s catalog
+```
+
+_Create a new DB "catalog"_
+
+```
+$ sudo createdb -U catalog --locale=en_US.utf-8 -E utf-8 -O catalog catalog -T template0
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Soon Todo's:
 
 - RedirectMatch 404 /\.git
 
+
+
 # Future Todo's:
 
 - Add better permissions for PostgreSQL users
+
 
 
 # Helpful commands used
@@ -482,6 +548,12 @@ View Apache's error logs
 
 ```
 $ sudo cat /var/log/apache2/error.log
+```
+
+Delete user
+
+```
+$ sudo userdel <username>
 ```
 
 Delete an entire directory ([cyberciti.biz](http://www.cyberciti.biz/faq/linux-delete-folder-recursively/))

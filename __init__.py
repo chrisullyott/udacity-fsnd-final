@@ -1,3 +1,9 @@
+# !os
+import os
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+def getClientSecrets():
+  return os.path.join(APP_ROOT, "client_secrets.json")
+
 # !flask
 from flask import (Flask, render_template, url_for, request, redirect, flash,
 jsonify)
@@ -26,7 +32,7 @@ import json
 import requests
 from flask import make_response
 CLIENT_ID = json.loads(
-  open('oauth/google_client_secrets.json', 'r').read())['web']['client_id']
+  open('/var/www/catalog/catalog/oauth/google_client_secrets.json', 'r').read())['web']['client_id']
 
 # !libraries
 # import dicttoxml
@@ -70,7 +76,7 @@ def gconnect():
 
   # Upgrade authorization code to credentials object
   try:
-    oauth_flow = flow_from_clientsecrets('oauth/google_client_secrets.json',
+    oauth_flow = flow_from_clientsecrets('/var/www/catalog/catalog/oauth/google_client_secrets.json',
       scope='')
     oauth_flow.redirect_uri = 'postmessage'
     credentials = oauth_flow.step2_exchange(code)
@@ -170,9 +176,9 @@ def fbconnect():
   print "Facebook access token received: %s" % access_token
 
   app_id = json.loads(
-    open('oauth/fb_client_secrets.json', 'r').read())['web']['app_id']
+    open('/var/www/catalog/catalog/oauth/fb_client_secrets.json', 'r').read())['web']['app_id']
   app_secret = json.loads(
-    open('oauth/fb_client_secrets.json', 'r').read())['web']['app_secret']
+    open('/var/www/catalog/catalog/oauth/fb_client_secrets.json', 'r').read())['web']['app_secret']
   url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
       app_id, app_secret, access_token)
   h = httplib2.Http()
