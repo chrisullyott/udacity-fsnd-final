@@ -40,9 +40,6 @@ $ chmod 600 ~/.ssh/udacity_key.rsa
 $ ssh -i ~/.ssh/udacity_key.rsa root@52.89.11.168
 ```
 
-_Verify that you can log in._
-
-
 ## 2. Update the server
 
 #### View updatable packages
@@ -57,7 +54,7 @@ $ sudo apt-get update
 $ sudo apt-get upgrade
 ```
 
-#### If some downloads failed, try again
+#### If some downloads failed, try again with:
 
 ```
 $ sudo apt-get upgrade --fix-missing
@@ -84,22 +81,24 @@ $ sudo adduser grader
 ```
 $ sudo nano /etc/sudoers.d/grader
 ```
-_Add to this line to the sudoers file:_
+
+_Add to this line to this sudoers file:_
 
 ```
 grader ALL=(ALL:ALL) ALL
 ```
 
-_Back on the local machine, generate a new SSH keypair with a good passphrase. I called mine "grader"._
+_Back on the local machine, generate a new SSH keypair with a passphrase. I called mine "grader"._
+
 ```
 $ ssh-keygen
 ```
 
-_Rename the PRIVATE KEY file "grader" to_ `grader.rsa`
+_Rename the PRIVATE KEY file "grader" to "grader.rsa"_
 
-_Copy the contents of the public key (the "grader.pub" file)_
+_Open and copy the contents of the public key (the "grader.pub" file)_
 
-_SSH into the server as root again, and add the new public key to user_ `grader`
+_SSH into the server as root again, and add the new public key to user "grader"_
 ```
 $ sudo mkdir /home/grader/.ssh
 $ sudo nano /home/grader/.ssh/authorized_keys
@@ -117,15 +116,24 @@ $ su root
 $ su grader
 ```
 
-_Reset the password for the user "grader" and use a complex, secure password:_
+_Reset the password for the user "grader":_
 
 ```
 $ passwd grader
 ```
 
-_We've now given_ `grader` _sudo access. Stay logged in as_ `grader` throughout the rest of the setup.
+_Log out, and verify that you can log in as "grader". On your local operating system, you will be asked to enter your passphrase._
+
+```
+$ ssh -i ~/.ssh/grader.rsa grader@52.89.11.168
+```
+
+_If you can successfully log in, we've now given_ `grader` _sudo access. Stay logged in as_ `grader` _throughout the rest of the setup._
+
 
 ## 4. Disable root login
+
+**WARNING** _Here we will be disabling root access, so make sure you can successfully log in with sudo access with "grader"! If you cannot log in and/or cannot use "sudo" commands, you must not proceed!_
 
 #### Remove SSH key from root user
 
