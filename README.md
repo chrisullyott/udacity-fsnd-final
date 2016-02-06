@@ -18,7 +18,7 @@ _1. Place the provided private key in your local_ `~/.ssh` _directory. Name it "
 
 _2. chmod this file with permissions 600 with command: "chmod 600 ~/.ssh/grader.rsa"_
 
-_3. Log in via the open SSH Port with the following command:_
+_3. Log in via the open SSH port with the following command:_
 
 ```
 $ ssh -i ~/.ssh/grader.rsa grader@52.89.11.168 -p 2200
@@ -59,7 +59,7 @@ $ sudo apt-get update
 $ sudo apt-get upgrade
 ```
 
-#### If some downloads failed, try again with:
+#### If some downloads failed, try again
 
 ```
 $ sudo apt-get upgrade --fix-missing
@@ -113,6 +113,12 @@ _Paste the public key in this file and save._
 
 _The public key is also available in this repository, as_ `grader.pub`_._
 
+_Restart sshd:_
+
+```
+$ sudo service ssh restart
+```
+
 #### Verify that you can now switch between these users successfully
 
 ```
@@ -138,7 +144,7 @@ _If you can successfully log in, we've now given_ `grader` _sudo access. Stay lo
 
 ## 4. Disable root login
 
-**WARNING** _Here we will be disabling root access, so make sure you can successfully log in with sudo access with "grader"! If you cannot log in and/or cannot use "sudo" commands, you must not proceed!_
+**WARNING! Here we will be disabling root access, so make sure you can successfully log in with sudo access with "grader"! If you cannot log in and/or cannot use "sudo" commands, you must not proceed!**
 
 #### Remove SSH key from root user
 
@@ -187,7 +193,6 @@ $ sudo ufw default allow outgoing
 ```
 
 ```
-$ sudo ufw allow ssh
 $ sudo ufw allow 2200
 $ sudo ufw allow 2200/tcp
 $ sudo ufw allow 80
@@ -231,13 +236,13 @@ $ sudo nano /etc/timezone
 
 _Many of the following steps follow Digital Ocean's tutorial, [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)._ It is not recommended to skip any of these steps!
 
-#### Install Apache 2:
+#### Install Apache 2
 
 ```
 $ sudo apt-get install apache2
 ```
 
-#### Install WSGI for Apache:
+#### Install WSGI for Apache
 
 _WSGI is an Apache helper for Python applications. (For more info, see [mod_wsgi](http://www.modwsgi.org/))_
 
@@ -313,7 +318,7 @@ $ sudo apt-get install python-pip
 
 #### Create virtual environment
 
-_Create a virtual environment with **virtualenv**. Your environment's name can be "venv" or anything._
+_Create a virtual environment with_ `virtualenv` _. Your environment's name can be "venv" or anything._
 ```
 $ sudo pip install virtualenv
 $ sudo virtualenv venv
@@ -392,7 +397,7 @@ from catalog import app as application
 application.secret_key = 'super_secret_key'
 ```
 
-_This is a good time to restart apache:_
+_Restart apache_
 ```
 $ sudo service apache2 restart
 ```
@@ -405,16 +410,15 @@ _Since we will be running the database on this server, we will need to make some
 
 _From [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)_
 
-#### Check that PostreSQL is installed
-
-_This should return the location of the Postgres binary. If not, go back and install PostreSQL._
-```
-$ which psql
-```
-
 #### Install PostgreSQL
 ```
 $ sudo apt-get install postgresql postgresql-contrib
+```
+
+#### Check that PostreSQL is installed
+_This should return the location of the Postgres binary. If not, go back and install PostreSQL._
+```
+$ which psql
 ```
 
 #### Secure PostgreSQL
@@ -464,6 +468,8 @@ postgres=# \q
 $ sudo service postgresql restart
 ```
 
+#### Modify app DB calls
+
 _If not already changed, change the app's sqlite database setup to PostgreSQL:_
 ```
 $ sudo nano /var/www/catalog/catalog/database_setup.py
@@ -508,6 +514,7 @@ _The secrets files don't exist in this repository for security reasons, so we'll
 ```
 $ cd /var/www/catalog/catalog
 $ sudo mkdir oauth
+$ cd oauth
 $ sudo nano google_client_secrets.json
 $ sudo nano fb_client_secrets.json
 ```
@@ -539,12 +546,11 @@ ec2-52-89-11-168.us-west-2.compute.amazonaws.com
 
 ## 14. Additional security
 
-_Let's be sure to prevent public access to a few directories via htaccess. This can be done with file permissions or in the Apache configuration file for this site also, but starting an .htaccess file could be useful in the future. Also, this helps keep rules for app-specific directories in one place._
+_Let's be sure to prevent public access to a few directories via htaccess. This can be done with file permissions or in the Apache configuration file for this site also, but starting an_ `.htaccess` _file could be useful in the future. Also, this helps keep rules for app-specific directories in one place._
 ```
 $ sudo nano /var/www/catalog/catalog/.htaccess
 
 RedirectMatch 404 /\.git  
-RedirectMatch 404 /\oauth  
 ```
 
 ## 15. Run!
@@ -554,15 +560,19 @@ _Ok, now let's run the app! I would say "test" the app, but that doesn't sound a
 $ sudo python __init__.py
 ```
 
-_Load the app at:_
+_Check for Python errors here._
+
+_Now load the app at:_
 
 [http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
 
-
-_Check the error logs for any mention of problems:_
+_Now check the error logs for any mention of problems:_
 ```
 $ sudo cat /var/log/apache2/error.log
 ```
+
+_Ok! We're up and running!_
+
 
 # Helpful commands used
 
@@ -591,10 +601,6 @@ $ sudo rm -rf <folderName>
 
 [Udacity Getting Started Guide](https://docs.google.com/document/d/1J0gpbuSlcFa2IQScrTIqI6o3dice-9T7v8EDNjJDfUI/pub)
 
-[stueken's project example](https://github.com/stueken/FSND-P5_Linux-Server-Configuration)
-
 [Udacity Forums](https://discussions.udacity.com/t/linux-server-configuration-final-sql-alchemy-v-psql/44448)
 
-[Error message when I run sudo: unable to resolve host (none)](http://askubuntu.com/questions/59458/error-message-when-i-run-sudo-unable-to-resolve-host-none)
-
-
+[stueken's project example](https://github.com/stueken/FSND-P5_Linux-Server-Configuration)
