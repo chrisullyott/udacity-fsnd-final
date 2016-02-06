@@ -142,11 +142,11 @@ _Delete all the contents in the authorized keys file for root._
 ```
 $ sudo nano /home/root/.ssh/authorized_keys
 ```
-_The root user can no longer log in using the provided SSH keys. Let's now disable SSH access for root altogether in the following steps._
+_The root user can no longer log in using the provided SSH keys. Let's now disable access for root altogether in the following steps and add more security updates._
 
 #### Change default SSH port and disable root login
 
-_Remember, be sure to be logged in as_ `grader` _at this point._
+_Remember, be sure to have logged in as_ `grader` _at this point._
 
 ```
 $ sudo nano /etc/ssh/sshd_config
