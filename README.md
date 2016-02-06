@@ -1,4 +1,6 @@
-# App Details
+# Udacity FSND Project 5
+
+![screenshot](http://downloads.chrisullyott.com/courses/udacity/full-stack/p5-screenshot.jpg)
 
 #### IP address
 
