@@ -492,7 +492,7 @@ $ sudo nano /var/www/catalog/catalog/lotsofmenus.py
 engine = create_engine("postgresql://catalog:catalog@localhost/catalog")
 ```
 
-_If not already changed, use the full path to the_ `oauth` _directory wherever it's used. There is a cleaner way to do this, but using the_ `os`__
+_If not already changed, use the full path to the_ `oauth` _directory wherever it's used._
 ```
 $ sudo nano /var/www/catalog/catalog/__init__.py
 
