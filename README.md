@@ -2,28 +2,6 @@
 
 ![screenshot](http://downloads.chrisullyott.com/courses/udacity/full-stack/p5-screenshot.jpg)
 
-#### App URL
-
-[http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/](http://ec2-52-89-11-168.us-west-2.compute.amazonaws.com/)
-
-#### IP address
-
-`52.89.11.168`
-
-#### Server login
-
-_As a security precaution,_ `root` _login has been disabled. However, the user_ `grader` _has been given sudo access. To log in as grader, use the provided private key and follow these steps._
-
-_1. Place the provided private key in your local_ `~/.ssh` _directory. Name it "grader.rsa"._
-
-_2. chmod this file with permissions 600 with command: "chmod 600 ~/.ssh/grader.rsa"_
-
-_3. Log in via the open SSH port with the following command:_
-
-```
-$ ssh -i ~/.ssh/grader.rsa grader@52.89.11.168 -p 2200
-```
-
 # Server Setup Steps!
 
 _Here are the steps I personally took to complete this project. There are a lot of steps!_
