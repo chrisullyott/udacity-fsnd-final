@@ -1,6 +1,6 @@
 # Udacity FSND Project 5
 
-![screenshot](http://downloads.chrisullyott.com/courses/udacity/full-stack/p5-screenshot.jpg)
+![screenshot](http://downloads.chrisullyott.com/courses/Udacity/FSND/p5-screenshot.jpg)
 
 # Server Setup Steps!
 
